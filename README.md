@@ -11,47 +11,34 @@ Terraform 0.13. Pin module version to `~> v5.0`. Submit pull-requests to `master
 ### ECS Fargate Service
 
 ```hcl
-resource "aws_ecs_cluster" "cluster" {
-  name = "example-ecs-cluster"
-
-  capacity_providers = ["FARGATE_SPOT", "FARGATE"]
-
-  default_capacity_provider_strategy {
-    capacity_provider = "FARGATE_SPOT"
-  }
-
-  setting {
-    name  = "containerInsights"
-    value = "disabled"
-  }
-}
-
 module "fargate" {
-  source = "../modules/fargate"
+  source = "git@github.com:dmytro-dorofeiev/terraform-aws-ecs-fargate-module.git"
 
-  name_prefix        = "ecs-fargate-example"
-  vpc_id             = "vpc-abasdasd132"
-  private_subnet_ids = ["subnet-abasdasd132123", "subnet-abasdasd132123132"]
-  lb_arn             = "arn:aws:asdasdasdasdasdasad"
+  name_prefix             = "frontend"
+  service_name            = "frontend"
+  vpc_id                  = local.vpc_id
+  private_subnet_ids      = local.vpc_private_subnets
+  cluster_id              = data.aws_ecs_cluster.default.arn
+  desired_count           = 1
+  lb_arn                  = "none"
+  task_container_protocol = "TCP"
+  task_container_image    = "nginx:latest"
+  task_definition_cpu     = 1024
+  task_definition_memory  = 2048
+  task_container_port     = 80
+  task_container_secrets  = module.task_container_secrets.dynamic_secrets_json
+  load_balanced           = false
 
-  cluster_id         = aws_ecs_cluster.cluster.id
-
-  task_container_image   = "marcincuber/2048-game:latest"
-  task_definition_cpu    = 256
-  task_definition_memory = 512
-
-  task_container_port             = 80
-  task_container_assign_public_ip = true
+  ssm_allowed_parameters = "${var.environmnet}/*"
+  kms_key_arn            = data.aws_kms_key.default.arn
 
   health_check = {
-    port = "traffic-port"
-    path = "/"
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    interval            = 10
   }
 
-  tags = {
-    Environment = "test"
-    Project = "Test"
-  }
+  tags = local.common_tags
 }
 ```
 
