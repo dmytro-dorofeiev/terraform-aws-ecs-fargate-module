@@ -12,7 +12,7 @@ Terraform 0.13. Pin module version to `~> v5.0`. Submit pull-requests to `master
 
 ```hcl
 module "fargate" {
-  source = "git@github.com:dmytro-dorofeiev/terraform-aws-ecs-fargate-module.git"
+  source = "git::https://github.com/dmytro-dorofeiev/terraform-aws-ecs-fargate-module"
 
   name_prefix             = "frontend"
   service_name            = "frontend"
