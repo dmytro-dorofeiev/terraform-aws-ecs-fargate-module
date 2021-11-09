@@ -1,6 +1,6 @@
 # terraform-aws-ecs-fargate
 
-Terraform module to create AWS ECS FARGATE services. Module support both FARGATE and FARGATE-SPOT capacity provider settings.
+Terraform module to create AWS ECS FARGATE services.
 
 ## Terraform versions
 
