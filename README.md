@@ -4,18 +4,18 @@ Terraform module to create AWS ECS FARGATE services. Module support both FARGATE
 
 ## Terraform versions
 
-Terraform 0.13. Pin module version to `~> v5.0`. Submit pull-requests to `master` branch.
+Terraform >= 0.13.
 
 ## Usage
 
 ### ECS Fargate Service
 
 ```hcl
-module "fargate" {
+module "backend" {
   source = "git::https://github.com/dmytro-dorofeiev/terraform-aws-ecs-fargate-module"
 
-  name_prefix             = "frontend"
-  service_name            = "frontend"
+  name_prefix             = "backend"
+  service_name            = "backend"
   vpc_id                  = local.vpc_id
   private_subnet_ids      = local.vpc_private_subnets
   cluster_id              = data.aws_ecs_cluster.default.arn
